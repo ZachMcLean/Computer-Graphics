@@ -7,7 +7,7 @@ function main() {
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
     //  Load shaders and initialize attribute buffers
-    var program = initShaders( gl, "vertex-shader", "fragment-shader" );
+    program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
     
     // Four Vertices
@@ -16,16 +16,14 @@ function main() {
         vec2(-0.5, 0.5),
         vec2(0, 0.5),
         vec2(0, 0),
-
-        vec2(0.5, 0),
-        vec2(0.5, -0.5),
-        vec2(0, -0.5),
-        vec2(0, 0),
-
         vec2(0.5, 0),
         vec2(0.25, 0.5),
         vec2(0, 0),
 
+        vec2(0, 0),
+        vec2(0, -0.5),
+        vec2(0.5, -0.5),
+        vec2(0.5, 0),
         vec2(0, -0.5),
         vec2(-0.25, 0),
         vec2(-0.5, -0.5)
@@ -36,7 +34,7 @@ function main() {
     gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW );
 
-    // Associate out shader variables with our data buffer
+
     var vPosition = gl.getAttribLocation( program, "vPosition" );
     gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
@@ -49,14 +47,13 @@ function render() {
     gl.clear( gl.COLOR_BUFFER_BIT );
 
     // Draw the first square with the first color
-    // gl.uniform1i(gl.getUniformLocation(program, "colorChoice"), 1);
-    gl.drawArrays( gl.TRIANGLE_FAN, 0, 4 );
-
+    gl.uniform1i(gl.getUniformLocation(program, "colorChoice"), 0);
+    gl.drawArrays( gl.TRIANGLE_FAN, 0, 4);
+    gl.uniform1i(gl.getUniformLocation(program, "colorChoice"), 1);
+    gl.drawArrays( gl.TRIANGLES, 4, 3);
     // Draw the second square with the first color
-    // gl.uniform1i(gl.getUniformLocation(program, "colorChoice"), 1);
-    gl.drawArrays( gl.TRIANGLE_FAN, 4, 4 );
-
-    gl.drawArrays( gl.TRIANGLES, 8, 3);
-
+    gl.uniform1i(gl.getUniformLocation(program, "colorChoice"), 0);
+    gl.drawArrays( gl.TRIANGLE_FAN, 7, 4 );
+    gl.uniform1i(gl.getUniformLocation(program, "colorChoice"), 1);
     gl.drawArrays( gl.TRIANGLES, 11, 3);
 }
