@@ -23,8 +23,8 @@ function main() {
     gl.useProgram( program );
     
     // Load the data into the GPU
-    var bufferId = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+    var vBuffer = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
 
     // Associate out shader variables with our data buffer
@@ -35,12 +35,21 @@ function main() {
     render();
 }
 
+function scale4(a, b, c) {
+   	var result = mat4();
+   	result[0][0] = a;
+   	result[1][1] = b;
+   	result[2][2] = c;
+   	return result;
+}
+
 // generate points to draw a (non-solid) circle centered at 
 //(center[0], center[1]) using GL_Line_STRIP
 function GeneratePoints(center, radius) {
-    var vertices=[];
-	SIZE=100; // slices
+    var vertices=[];//connections between each point
+	SIZE=100; // number of slices
 
+    // alpha = 2(pi)
 	var angle = 2*Math.PI/SIZE;
 	
     // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
