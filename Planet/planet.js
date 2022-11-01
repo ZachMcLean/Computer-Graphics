@@ -26,14 +26,16 @@ function main()
 
     modelViewMatrix = mat4();
     // Generate the points for the 3 components of the planet
+    //   - generate four rings
+
     GenerateBackCircles();
-    // GenerateCircle(center, radius);
+    GenerateCircle();
     console.log("calculated points: " + {points});
     // GenerateFrontCircles();
-    // projectionMatrix = ortho(-8, 8, -8, 8, -1, 1);
-    gl.viewport( 0, 0, canvas.width, canvas.height );
-    // gl.clearColor( 0.2, 0.2, 0.5, 1.0 );
-    gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
+    projectionMatrix = ortho(-8, 8, -8, 8, -1, 1);
+    gl.viewport( 0, 200, canvas.width, canvas.height );
+    gl.clearColor( 0.2, 0.2, 0.5, 1.0 );
+    // gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
 
     //  Load shaders and initialize attribute buffers
     program = initShaders( gl, "vertex-shader", "fragment-shader" );
@@ -59,7 +61,7 @@ function main()
 
     console.log(program)
     modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix");
-    // projectionMatrixLoc= gl.getUniformLocation(program, "projectionMatrix");
+    projectionMatrixLoc= gl.getUniformLocation(program, "projectionMatrix");
 
     render();
 }
@@ -75,22 +77,22 @@ function scale4(a, b, c) {
 function GenerateBackCircles()
 {
     var center = vec2(0.0, 0.0); // center of circle
-    var radius = 0.6;
+    var radius = 0.8;
 	SIZE=100; // slices
 	var angle = Math.PI/SIZE;
     // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
     // to draw SIZE line segments 
 	for (var i=0; i<SIZE+1; i++) {
 	    console.log(center[0]+radius*Math.cos(i*angle));
-	    points.push([center[0]+radius*Math.cos(i*angle), 
-		        center[1]+radius*Math.sin(i*angle)]);
+	    points.push([center[0]+radius*Math.cos(i*angle), center[1]+radius*Math.sin(i*angle)]);
         colors.push(vec4(0.27, 0.16, 0.06, 1)); // red
 	}
-	var r1 = rotate(55.0, 50.0, 0.0, 1.0);
+	var r1 = rotate(65.0, 50.0, 0.0, 1.0);
 	var r2 = rotate(65.0, 0.0, 0.0, 1.0);
+	var s = scale4(1, 1.618, 1);
 	// var r3 = rotate(0, 35, 0, 1.0);
     // modelViewMatrix=mult(modelViewMatrix, r1);
-    modelViewMatrix=mult(mult(modelViewMatrix, r2), r1);
+    modelViewMatrix=mult(mult(mult(modelViewMatrix, s), r2), r1);
     // modelViewMatrix=mult(mult(mult(modelViewMatrix, r3), r2), r1);
     // center = vec2(-0.3, 0);
     // // blue yellow
@@ -107,10 +109,26 @@ function GenerateBackCircles()
 
 }
 
-function GenerateCircle(center, radius)
+function GenerateCircle()
 {
 
     // var S = scale4(1,1.618,1)
+    
+   var center = vec2(0.0, 0.0); // center of circle
+    var radius = 1.0;
+	SIZE=100; // slices
+	var angle = 2*Math.PI/SIZE;
+    // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
+    // to draw SIZE line segments 
+	for (var i=0; i<SIZE+1; i++) {
+	    points.push([center[0]+radius*Math.cos(i*angle), center[1]+radius*Math.sin(i*angle)]);
+        colors.push(vec4( 1.0, 0.0, 0.0, 1.0 )); // red
+	}
+	var s = scale4(1, 1.618, 1);
+    var s2 = scale4(8,8,8);
+    // var t1 = translate()
+    modelViewMatrix = mult(mult(modelViewMatrix, s), s2);
+    // modelViewMatrix = mult(modelViewMatrix, s);
 }
 
 function GenerateFrontCircles()
@@ -125,13 +143,20 @@ function DrawFullPlanet()
 {
 
     // Draw Back Circles
+	// gl.vertexAttrib3f(program, points, colors, 0.0)
 
+    gl.drawArrays( gl.LINE_STRIP, 0, SIZE+1);
+
+
+  
     // blue circle
     // gl.uniform1i(gl.getUniformLocation(program, "colorIndex"), 2);
     // gl.drawArrays( gl.TRIANGLE_FAN, 0, SIZE+2);
     // gl.drawArrays( gl.LINE_STRIP, 0, SIZE+1);
     // draw planet circle
-
+    // gl.viewport( 0, 0, canvas.width/2, canvas.height);
+    gl.viewport( 0, 0, canvas.width, canvas.height);
+    gl.drawArrays( gl.LINE_STRIP, SIZE+1, SIZE+1);
  
     // Draw Front Circles
 
@@ -141,10 +166,8 @@ function DrawFullPlanet()
 function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT );
-
-	// gl.vertexAttrib3f(program, points, colors, 0.0)
+    gl.viewport(0, 0, 300*1.618, 300); // golden ratio viewport
+    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-    gl.drawArrays( gl.LINE_STRIP, 0, SIZE+1);
-    // gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
-    // DrawFullPlanet();
+    DrawFullPlanet();
 }
