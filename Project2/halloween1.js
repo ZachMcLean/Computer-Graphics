@@ -8,7 +8,14 @@ var cmtStack=[];
 
 var points=[];
 var colors=[];
+var Ratio=1.618;   // ratio used for canvas and for world window
 
+// my variables
+var SIZE;
+var ANGLE = 90;
+var program;
+var gl;
+var canvas;
 function main() {
     canvas = document.getElementById( "gl-canvas" );
 
@@ -20,6 +27,7 @@ function main() {
     modelViewMatrix = mat4();
     projectionMatrix = ortho(-8, 8, -8, 8, -1, 1);
 
+    // gl.viewport( 0, 0, Ratio, canvas.height );
     initWebGL();
 
     render();
@@ -67,6 +75,52 @@ function GeneratePoints() {
 }
 
 function GeneratePlanet() {
+
+    var radius = 0.65;
+    var center = vec2(0.0, 0.0); // center of circle
+	SIZE=100; // slices
+	var angle = Math.PI/SIZE;
+    // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
+    // to draw SIZE line segments 
+	for (var i=0; i<SIZE+1; i++) {
+	    // console.log(center[0]+radius*Math.cos(i*angle));
+	    points.push([center[0]+radius*Math.cos(i*angle), center[1]+radius*Math.sin(i*angle)]);
+        colors.push(vec4(1.0, 0.0, 1.0, 1.0)); // red
+	}
+
+    var radius = .7;
+	//SIZE=100; // slices
+	//var angle = Math.PI/SIZE;
+    // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
+    // to draw SIZE line segments 
+	for (var i=0; i<SIZE+1; i++) {
+	    // console.log(center[0]+radius*Math.cos(i*angle));
+	    points.push([center[0]+radius*Math.cos(i*angle), center[1]+radius*Math.sin(i*angle)]);
+        colors.push(vec4( 1.0, 0.5, 0.0, 1.0 )); // red
+	}
+
+    var radius = 0.75;
+	//SIZE=100; // slices
+	//var angle = Math.PI/SIZE;
+    // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
+    // to draw SIZE line segments 
+	for (var i=0; i<SIZE+1; i++) {
+	    // console.log(center[0]+radius*Math.cos(i*angle));
+	    points.push([center[0]+radius*Math.cos(i*angle), center[1]+radius*Math.sin(i*angle)]);
+        colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
+	}
+
+    var radius = 0.8;
+	//SIZE=100; // slices
+	//var angle = Math.PI/SIZE;
+    // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
+    // to draw SIZE line segments 
+	for (var i=0; i<SIZE+1; i++) {
+	    // console.log(center[0]+radius*Math.cos(i*angle));
+	    points.push([center[0]+radius*Math.cos(i*angle), center[1]+radius*Math.sin(i*angle)]);
+        colors.push(vec4( 0.0, 0.9, 0.9, 1.0 )); // red
+	}
+
 	var Radius=1.0;
 	var numPoints = 80;
 
@@ -83,29 +137,67 @@ function GeneratePlanet() {
 }
 
 function DrawGhost() {
+
+    gl.viewport(0, 0, 300*1.618, 300); // golden ratio viewport
     modelViewMatrix=mult(modelViewMatrix, scale4(1/10, 1/10, 1));
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-    gl.drawArrays( gl.LINE_LOOP, 80, 87); // body
-    gl.drawArrays( gl.LINE_LOOP, 167, 6);  // mouth
-    gl.drawArrays( gl.LINE_LOOP, 173, 5);  // nose
+    gl.drawArrays( gl.LINE_LOOP, 484, 87); // body
+    gl.drawArrays( gl.LINE_LOOP, 571, 6);  // mouth
+    gl.drawArrays( gl.LINE_LOOP, 577, 5);  // nose
 
-    gl.drawArrays( gl.LINE_LOOP, 178, 9);  // left eye
-    gl.drawArrays( gl.TRIANGLE_FAN, 187, 7);  // left eye ball
+    gl.drawArrays( gl.LINE_LOOP, 582, 9);  // left eye
+    gl.drawArrays( gl.TRIANGLE_FAN, 591, 7);  // left eye ball
 
     modelViewMatrix=mult(modelViewMatrix, translate(2.6, 0, 0));
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-    gl.drawArrays( gl.LINE_STRIP, 178, 9);  // right eye
-    gl.drawArrays( gl.TRIANGLE_FAN, 187, 7);  // right eye ball
+    gl.drawArrays( gl.LINE_STRIP, 582, 9);  // right eye
+    gl.drawArrays( gl.TRIANGLE_FAN, 591, 7);  // right eye ball
 }
 
-function DrawFullPlanet() {
-	modelViewMatrix=mat4();
+function DrawFullPlanet()
+{
+    // gl.viewport( 0, 0, canvas.width, canvas.height);
+    gl.viewport(-140, 260, 300*1.618, 300); // golden ratio viewport
+    // Draw Back Circles
 	modelViewMatrix = mult(modelViewMatrix, translate(2, 1, 0));
-	modelViewMatrix=mult(modelViewMatrix, scale4(2, 2*1.618, 1));
-        gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-        // draw planet circle
-	gl.drawArrays(gl.TRIANGLE_FAN, 0, 80);
+	modelViewMatrix=mult(modelViewMatrix, scale4(1, Ratio, 1));
+	modelViewMatrix=mult(modelViewMatrix, scale4(3, 2, 1));
+	modelViewMatrix = mult(modelViewMatrix, rotate(65.0, 0.0, 0.0, 1.0));
+	// modelViewMatrix = mult(modelViewMatrix, rotate(25.0, 1.0, 0.0, 0.0));
+	modelViewMatrix = mult(modelViewMatrix, rotate(70.0, 1.0, 0.0, 0.0));
+    
+    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+    gl.drawArrays( gl.LINE_STRIP, 0, SIZE+1);
+    gl.drawArrays( gl.LINE_STRIP, SIZE+1, SIZE+1);
+    gl.drawArrays( gl.LINE_STRIP, 202, SIZE+1);
+    gl.drawArrays( gl.LINE_STRIP, 303, SIZE+1);
+
+    // draw planet circle
+    modelViewMatrix = mat4();
+
+	modelViewMatrix = mult(modelViewMatrix, translate(2, 1, 0));
+	modelViewMatrix=mult(modelViewMatrix, scale4(1, Ratio, 1));
+    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+	gl.drawArrays(gl.TRIANGLE_FAN, 404, 80);
+
+    // Draw Front Circles
+    modelViewMatrix = mat4();
+	modelViewMatrix = mult(modelViewMatrix, translate(2, 1, 0));
+	modelViewMatrix=mult(modelViewMatrix, scale4(1, Ratio, 1));
+	modelViewMatrix=mult(modelViewMatrix, scale4(3, 2, 1));
+	modelViewMatrix = mult(modelViewMatrix, rotate(65.0, 0.0, 0.0, 1.0));
+	// modelViewMatrix = mult(modelViewMatrix, rotate(25.0, 1.0, 0.0, 0.0));
+	modelViewMatrix = mult(modelViewMatrix, rotate(70.0, 1.0, 0.0, 0.0));
+	modelViewMatrix=mult(modelViewMatrix, scale4(1, -1, 1));
+    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+    gl.drawArrays( gl.LINE_STRIP, 0, SIZE+1);
+    gl.drawArrays( gl.LINE_STRIP, SIZE+1, SIZE+1);
+    gl.drawArrays( gl.LINE_STRIP, 202, SIZE+1);
+    gl.drawArrays( gl.LINE_STRIP, 303, SIZE+1);
+	modelViewMatrix = mult(modelViewMatrix, translate(2, 1, 0));
+
 }
+
 
 function render() {
        gl.clear( gl.COLOR_BUFFER_BIT );

@@ -105,8 +105,8 @@ function GenerateBackCircles()
 	}
 
     var radius = .7;
-	SIZE=100; // slices
-	var angle = Math.PI/SIZE;
+	//SIZE=100; // slices
+	//var angle = Math.PI/SIZE;
     // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
     // to draw SIZE line segments 
 	for (var i=0; i<SIZE+1; i++) {
@@ -116,8 +116,8 @@ function GenerateBackCircles()
 	}
 
     var radius = 0.75;
-	SIZE=100; // slices
-	var angle = Math.PI/SIZE;
+	//SIZE=100; // slices
+	//var angle = Math.PI/SIZE;
     // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
     // to draw SIZE line segments 
 	for (var i=0; i<SIZE+1; i++) {
@@ -127,8 +127,8 @@ function GenerateBackCircles()
 	}
 
     var radius = 0.8;
-	SIZE=100; // slices
-	var angle = Math.PI/SIZE;
+	//SIZE=100; // slices
+	//var angle = Math.PI/SIZE;
     // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
     // to draw SIZE line segments 
 	for (var i=0; i<SIZE+1; i++) {
