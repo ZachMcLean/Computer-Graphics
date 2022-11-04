@@ -1,38 +1,36 @@
+<!DOCTYPE html>
 <html>
 <head>
-<title>Illustration of 2D Transformations</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<title>3D Sierpinski Gasket</title>
 </head>
 
 <script id="vertex-shader" type="x-shader/x-vertex">
-attribute  vec4 vPosition;
-uniform mat4 modelViewMatrix;
+attribute vec4 vPosition;
+varying vec4 vColor;
 void main() {
-   gl_Position =  modelViewMatrix * vPosition;
-} 
+	gl_PointSize = 1.0;
+    vColor = vec4((1.0+vPosition.xyz)/2.0, 1.0);
+    gl_Position = vPosition;
+}
 </script>
 
 <script id="fragment-shader" type="x-shader/x-fragment">
 precision mediump float;
-uniform int colorIndex;
+varying vec4 vColor;
 void main() {
-   if (colorIndex == 0)
-      gl_FragColor = vec4 (0, 0, 0, 1);
-   else if (colorIndex == 1)
-      gl_FragColor = vec4 (1, 1, 1, 1);
-   else 
-      gl_FragColor = vec4 (0, 1, 1, 1);
+    gl_FragColor = vColor;
 }
 </script>
 
 <script type="text/javascript" src="../Common/webgl-utils.js"></script>
 <script type="text/javascript" src="../Common/initShaders.js"></script>
 <script type="text/javascript" src="../Common/MV.js"></script>
-<script type="text/javascript" src="transformations2d.js"></script>
+<script type="text/javascript" src="10-gasket3.js"></script>
 
 <body onload="main()">
-<canvas id="gl-canvas" width="512"" height="512">
+<canvas id="gl-canvas" width="512" height="512">
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
-   
 </body>
 </html>

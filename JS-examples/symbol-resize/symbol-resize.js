@@ -105,7 +105,7 @@ function render() {
     //  Configure WebGL
     gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
     
-    //gl.viewport(0, 0, 500, 500);  // default square viewport
+    // gl.viewport(0, 0, 500, 500);  // default square viewport
     gl.viewport(0, 0, 300*1.618, 300); // golden ratio viewport
 
     gl.clear( gl.COLOR_BUFFER_BIT );

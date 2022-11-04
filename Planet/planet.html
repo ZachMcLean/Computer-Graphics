@@ -8,13 +8,12 @@ uniform mat4 projectionMatrix;
 
 attribute vec4 vColor;
 varying vec4 fColor;
-uniform float u_CosB, u_SinB;
 void main() {
-  mat4  rotationMatrix = 
-        mat4( u_CosB, u_SinB, 0.0, 0.0,
-              u_SinB, u_CosB, 0.0, 0.0,
-              0.0,  0.0, 1.0, 0.0,
-              0.0,  0.0, 0.0, 1.0 );
+  // mat4  rotationMatrix = 
+  //       mat4( u_CosB, u_SinB, 0.0, 0.0,
+  //             u_SinB, u_CosB, 0.0, 0.0,
+  //             0.0,  0.0, 1.0, 0.0,
+  //             0.0,  0.0, 0.0, 1.0 );
   gl_Position =  projectionMatrix * modelViewMatrix * vPosition;
   // gl_Position = modelViewMatrix * vPosition;
   fColor = vColor;
