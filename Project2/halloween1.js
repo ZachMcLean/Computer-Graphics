@@ -72,6 +72,18 @@ function scale4(a, b, c) {
 function GeneratePoints() {
     	GeneratePlanet();
     	GenerateGhost();
+        GenerateGround();
+}
+
+function GenerateGround() {
+    points.push(vec2(0.0, 0.0));
+        colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
+    points.push(vec2(0.0,  300));
+        colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
+    points.push(vec2(300, 300));
+        colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
+    points.push(vec2(300, 0.0));
+        colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
 }
 
 function GeneratePlanet() {
@@ -88,7 +100,7 @@ function GeneratePlanet() {
         colors.push(vec4(1.0, 0.0, 1.0, 1.0)); // red
 	}
 
-    var radius = .7;
+    var radius = .85;
 	//SIZE=100; // slices
 	//var angle = Math.PI/SIZE;
     // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
@@ -110,7 +122,7 @@ function GeneratePlanet() {
         colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
 	}
 
-    var radius = 0.8;
+    var radius = 0.95;
 	//SIZE=100; // slices
 	//var angle = Math.PI/SIZE;
     // Because LINE_STRIP is used in rendering, SIZE + 1 points are needed 
@@ -136,9 +148,19 @@ function GeneratePlanet() {
 	}
 }
 
+function DrawGround() {
+    gl.viewport(0, 0, 300*Ratio, 300); // golden ratio viewport
+    modelViewMatrix = mat4();
+    // modelViewMatrix=mult(modelViewMatrix, scale4(1, Ratio, 1));
+
+    // modelViewMatrix=mult(modelViewMatrix, translate(2.6, 0, 0));
+    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+    gl.drawArrays( gl.TRIANGLE_FAN, 598, 4 );
+}
+
 function DrawGhost() {
 
-    gl.viewport(0, 0, 300*1.618, 300); // golden ratio viewport
+    gl.viewport(0, 70, 300*1.618, 300); // golden ratio viewport
     modelViewMatrix=mult(modelViewMatrix, scale4(1/10, 1/10, 1));
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
     gl.drawArrays( gl.LINE_LOOP, 484, 87); // body
@@ -157,7 +179,7 @@ function DrawGhost() {
 function DrawFullPlanet()
 {
     // gl.viewport( 0, 0, canvas.width, canvas.height);
-    gl.viewport(-140, 260, 300*1.618, 300); // golden ratio viewport
+    gl.viewport(-110, 260, 300*1.618, 300); // golden ratio viewport
     // Draw Back Circles
 	modelViewMatrix = mult(modelViewMatrix, translate(2, 1, 0));
 	modelViewMatrix=mult(modelViewMatrix, scale4(1, Ratio, 1));
@@ -219,4 +241,6 @@ function render() {
        DrawGhost();
 
        // add other things, like bow, arrow, spider, flower, tree ...
+    
+    DrawGround();
 }
