@@ -34,7 +34,7 @@ function main() {
 }
 
 function initWebGL() {
-    gl.viewport( 0, 0, canvas.width, canvas.height );
+    // gl.viewport( 0, 0, canvas.width*Ratio, canvas.height );
     gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
 
     //  Load shaders and initialize attribute buffers
@@ -70,19 +70,19 @@ function scale4(a, b, c) {
 }
 
 function GeneratePoints() {
-    	GeneratePlanet();
-    	GenerateGhost();
+    	// GeneratePlanet();
+    	// GenerateGhost();
         GenerateGround();
 }
 
 function GenerateGround() {
-    points.push(vec2(0.0, 0.0));
+    points.push(vec2(-415.0, -256.0));
         colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
-    points.push(vec2(0.0,  300));
+    points.push(vec2(-415.0,  1.5));
         colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
-    points.push(vec2(300, 300));
+    points.push(vec2(415.0, 1.5));
         colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
-    points.push(vec2(300, 0.0));
+    points.push(vec2(415.0, -256.0));
         colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
 }
 
@@ -149,13 +149,15 @@ function GeneratePlanet() {
 }
 
 function DrawGround() {
-    gl.viewport(0, 0, 300*Ratio, 300); // golden ratio viewport
-    modelViewMatrix = mat4();
-    // modelViewMatrix=mult(modelViewMatrix, scale4(1, Ratio, 1));
-
-    // modelViewMatrix=mult(modelViewMatrix, translate(2.6, 0, 0));
+    // gl.viewport(-415, -256, canvas.width, canvas.height); // golden ratio viewport
+    gl.viewport(0, 0, canvas.width, canvas.height); // golden ratio viewport
+    console.log(canvas.width, canvas.height)
+    // modelViewMatrix = mat4();
+    // modelViewMatrix=mult(modelViewMatrix, scale4(-8, -4, 1));
+    // modelViewMatrix=mult(modelViewMatrix, translate(-8, 4, 0));
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-    gl.drawArrays( gl.TRIANGLE_FAN, 598, 4 );
+    // gl.drawArrays( gl.TRIANGLE_FAN, 598, 4 );
+    gl.drawArrays( gl.TRIANGLE_FAN, 0, 4 );
 }
 
 function DrawGhost() {
@@ -231,14 +233,14 @@ function render() {
        // draw stars and mountains... next
 
        // then, draw planet, add rings too
-       DrawFullPlanet();
-
-       // then, draw ghost
-       modelViewMatrix = mat4();
-       modelViewMatrix = mult(modelViewMatrix, translate(-3, -2, 0));
-       modelViewMatrix=mult(modelViewMatrix, scale4(2, 2, 1));
-       gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-       DrawGhost();
+       // DrawFullPlanet();
+       //
+       // // then, draw ghost
+       // modelViewMatrix = mat4();
+       // modelViewMatrix = mult(modelViewMatrix, translate(-3, -2, 0));
+       // modelViewMatrix=mult(modelViewMatrix, scale4(2, 2, 1));
+       // gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+       // DrawGhost();
 
        // add other things, like bow, arrow, spider, flower, tree ...
     
