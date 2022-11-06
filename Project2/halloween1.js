@@ -15,13 +15,14 @@ var SIZE;
 var ANGLE = 90;
 var program;
 var gl;
-var canvas;
+var canvas, ctx;
 function main() {
     canvas = document.getElementById( "gl-canvas" );
-
     gl = WebGLUtils.setupWebGL( canvas );
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
+    // ctx = canvas.getContext('2d');
+    console.log("ctx" + ctx)
     GeneratePoints();
 
     modelViewMatrix = mat4();
@@ -35,7 +36,7 @@ function main() {
 
 function initWebGL() {
     // gl.viewport( 0, 0, canvas.width*Ratio, canvas.height );
-    gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
+    // gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
 
     //  Load shaders and initialize attribute buffers
     var program = initShaders( gl, "vertex-shader", "fragment-shader" );
@@ -72,18 +73,30 @@ function scale4(a, b, c) {
 function GeneratePoints() {
     	// GeneratePlanet();
     	// GenerateGhost();
+        // GenerateSky();
         GenerateGround();
+}
+
+function GenerateSky() {
+    // create gradient
+
+    // var gradient = canvas.createLinearGradient(0,0,300,0);
+    // gradient.addColorStop(0,"red");
+    // gradient.addColorStop(1,"blue");
+    // canvas.rect(0, 0, canvas.width, canvas.height);
+    // canvas.fillStyle=gradient;
+    // canvas.fill()
 }
 
 function GenerateGround() {
     points.push(vec2(-415.0, -256.0));
-        colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
-    points.push(vec2(-415.0,  1.5));
-        colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
-    points.push(vec2(415.0, 1.5));
-        colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
+        colors.push(vec4(0.0, 0.3, 0.0, 1.0)); // green
+    points.push(vec2(-415.0,  1.3));
+        colors.push(vec4(0.0, 0.3, 0.0, 1.0)); // green
+    points.push(vec2(415.0, 1.3));
+        colors.push(vec4(0.0, 0.3, 0.0, 1.0)); // green
     points.push(vec2(415.0, -256.0));
-        colors.push(vec4(0.0, 1.0, 0.0, 1.0)); // green
+        colors.push(vec4(0.0, 0.3, 0.0, 1.0)); // green
 }
 
 function GeneratePlanet() {
