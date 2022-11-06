@@ -71,8 +71,8 @@ function scale4(a, b, c) {
 }
 
 function GeneratePoints() {
-    	// GeneratePlanet();
-    	// GenerateGhost();
+    	GeneratePlanet();
+    	GenerateGhost();
         // GenerateSky();
         GenerateGround();
 }
@@ -90,13 +90,13 @@ function GenerateSky() {
 
 function GenerateGround() {
     points.push(vec2(-415.0, -256.0));
-        colors.push(vec4(0.0, 0.3, 0.0, 1.0)); // green
-    points.push(vec2(-415.0,  1.3));
-        colors.push(vec4(0.0, 0.3, 0.0, 1.0)); // green
-    points.push(vec2(415.0, 1.3));
-        colors.push(vec4(0.0, 0.3, 0.0, 1.0)); // green
+        colors.push(vec4(0.0, 0.25, 0.0, 1.0)); // green
+    points.push(vec2(-415.0,  1.2));
+        colors.push(vec4(0.0, 0.25, 0.0, 1.0)); // green
+    points.push(vec2(415.0, 1.2));
+        colors.push(vec4(0.0, 0.25, 0.0, 1.0)); // green
     points.push(vec2(415.0, -256.0));
-        colors.push(vec4(0.0, 0.3, 0.0, 1.0)); // green
+        colors.push(vec4(0.0, 0.25, 0.0, 1.0)); // green
 }
 
 function GeneratePlanet() {
@@ -170,7 +170,7 @@ function DrawGround() {
     // modelViewMatrix=mult(modelViewMatrix, translate(-8, 4, 0));
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
     // gl.drawArrays( gl.TRIANGLE_FAN, 598, 4 );
-    gl.drawArrays( gl.TRIANGLE_FAN, 0, 4 );
+    gl.drawArrays( gl.TRIANGLE_FAN, 598, 4 );
 }
 
 function DrawGhost() {
@@ -237,25 +237,24 @@ function DrawFullPlanet()
 
 
 function render() {
-       gl.clear( gl.COLOR_BUFFER_BIT );
-       gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
-       gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+   gl.clear( gl.COLOR_BUFFER_BIT );
+   gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
+   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
-       // draw ground and sky first
+   // draw ground and sky first
+   DrawGround();
+   // draw stars and mountains... next
 
-       // draw stars and mountains... next
+   // then, draw planet, add rings too
+   DrawFullPlanet();
+   //
+   // // then, draw ghost
+   modelViewMatrix = mat4();
+   modelViewMatrix = mult(modelViewMatrix, translate(-3, -2, 0));
+   modelViewMatrix=mult(modelViewMatrix, scale4(2, 2, 1));
+   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+   DrawGhost();
 
-       // then, draw planet, add rings too
-       // DrawFullPlanet();
-       //
-       // // then, draw ghost
-       // modelViewMatrix = mat4();
-       // modelViewMatrix = mult(modelViewMatrix, translate(-3, -2, 0));
-       // modelViewMatrix=mult(modelViewMatrix, scale4(2, 2, 1));
-       // gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
-       // DrawGhost();
+   // add other things, like bow, arrow, spider, flower, tree ...
 
-       // add other things, like bow, arrow, spider, flower, tree ...
-    
-    DrawGround();
 }
