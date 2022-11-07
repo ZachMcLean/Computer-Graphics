@@ -13,6 +13,7 @@ var Ratio=1.618;   // ratio used for canvas and for world window
 // my variables
 var SIZE;
 var ANGLE = 90;
+var STAR_POINTS=6;		// number of points where star touches circle
 var program;
 var gl;
 var canvas, ctx;
@@ -22,7 +23,6 @@ function main() {
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
     // ctx = canvas.getContext('2d');
-    console.log("ctx" + ctx)
     GeneratePoints();
 
     modelViewMatrix = mat4();
@@ -75,6 +75,28 @@ function GeneratePoints() {
     	GenerateGhost();
         // GenerateSky();
         GenerateGround();
+        GenerateStars();
+}
+
+function GenerateStars() {
+    var center= vec2(0.0, 0.0);  // location of the center of the circle
+    var Radius = 0.55;			// Radius of circle
+    var radius = 0.25;  
+	angle=2*Math.PI/(STAR_POINTS*2);	// angle between each line used to make star
+
+	circle=1;	// flag to determine if point rendered is touching outer circle
+	for (var i=STAR_POINTS/2; i<5*STAR_POINTS/2; i++) {
+		if (circle) {
+			points.push([center[0]+Radius*Math.cos(i*angle), center[1]+Radius*Math.sin(i*angle)]);
+            colors.push(vec4(1.0, 1.0, 1.0, 1.0)); // green
+			circle=0;
+		}
+		else {
+			points.push([center[0]+radius*Math.cos(i*angle), center[1]+radius*Math.sin(i*angle)]);
+            colors.push(vec4(1.0, 1.0, 1.0, 1.0)); // green
+			circle=1;
+		}
+	}
 }
 
 function GenerateSky() {
@@ -173,6 +195,31 @@ function DrawGround() {
     gl.drawArrays( gl.TRIANGLE_FAN, 598, 4 );
 }
 
+function DrawStars() {
+
+    modelViewMatrix = mat4();
+    // gl.viewport(0, 0, Ratio, canvas.height); // golden ratio viewport
+    
+    
+    // modelViewMatrix = mult(modelViewMatrix, rotate(180.0, 0.0, 0.0, 1.0));
+    var w=canvas.width;
+    var h=canvas.height/5;
+    // w *= -1;
+    // h *= -1;
+    console.log(w, h)
+    for (var i=0; i<25; i++)   {
+       for (var j=0; j<25; j++) {
+          var rw = Math.floor(Math.random() * (w - 2 + 1)) + 30;
+          var rh = Math.floor(Math.random() * (h - 2 + 1)) + 3;
+          gl.viewport((i*rw)-90, 210+(j*rh), canvas.width/15, canvas.height/15);
+          // modelViewMatrix = mult(modelViewMatrix, translate(1, 2, 1));
+          gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+          gl.drawArrays( gl.LINE_LOOP, 602, 12);
+       }
+    }
+    // gl.drawArrays( gl.LINE_LOOP, 0, 12 );
+}
+
 function DrawGhost() {
 
     gl.viewport(0, 70, 300*1.618, 300); // golden ratio viewport
@@ -241,6 +288,7 @@ function render() {
    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
+   DrawStars();
    // draw ground and sky first
    DrawGround();
    // draw stars and mountains... next
