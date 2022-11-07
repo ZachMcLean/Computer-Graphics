@@ -16,7 +16,7 @@ var ANGLE = 90;
 var STAR_POINTS=6;		// number of points where star touches circle
 var program;
 var gl;
-var canvas, ctx;
+var canvas, n;
 function main() {
     canvas = document.getElementById( "gl-canvas" );
     gl = WebGLUtils.setupWebGL( canvas );
@@ -73,9 +73,9 @@ function scale4(a, b, c) {
 function GeneratePoints() {
     	GeneratePlanet();
     	GenerateGhost();
-        // GenerateSky();
         GenerateGround();
         GenerateStars();
+        GenerateBackground();
 }
 
 function GenerateStars() {
@@ -99,15 +99,68 @@ function GenerateStars() {
 	}
 }
 
-function GenerateSky() {
-    // create gradient
+function GenerateBackground() {
+  n = 3; // The number of vertices
+    // mountain vectors left --- right
+    
+// Close Mountains Range
+  points.push(vec2(2.0, 4.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(0.5,  -1.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(3.5, -1.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
 
-    // var gradient = canvas.createLinearGradient(0,0,300,0);
-    // gradient.addColorStop(0,"red");
-    // gradient.addColorStop(1,"blue");
-    // canvas.rect(0, 0, canvas.width, canvas.height);
-    // canvas.fillStyle=gradient;
-    // canvas.fill()
+  points.push(vec2(3.0, 5.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(1.0,  -1.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(5.0, -1.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+ //
+  points.push(vec2(4.5, 6.5));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(1.5,  -1.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(7.5, -1.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+
+  points.push(vec2(6.0, 5.3));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(4.0,  -1.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(7.5, -1.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+
+  points.push(vec2(7.0, 5.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(4.0,  -1.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(10, -1.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+
+
+  points.push(vec2(-8.0, 2.5));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(-9.5,  0.75));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(-6.5, 0.75));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+
+  points.push(vec2(-6.0, 3.5));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(-7.5,  0.75));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(-4.5, 0.75));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+ //
+  points.push(vec2(-4.0, 2.0));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(-5.5,  0.75));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  points.push(vec2(-2.5, 0.75));
+    colors.push(vec4(0.25, 0.1, 0.1, 1.0));
+  
 }
 
 function GenerateGround() {
@@ -183,6 +236,24 @@ function GeneratePlanet() {
 	}
 }
 
+function DrawBackground() {
+    modelViewMatrix = mat4();
+    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+    // firest mountain range
+    gl.drawArrays( gl.TRIANGLE_FAN, 614, n );
+    gl.drawArrays( gl.TRIANGLE_FAN, 617, n );
+    gl.drawArrays( gl.TRIANGLE_FAN, 620, n );
+    gl.drawArrays( gl.TRIANGLE_FAN, 623, n );
+    gl.drawArrays( gl.TRIANGLE_FAN, 626, n );
+
+    // farther mountain range
+    gl.drawArrays( gl.TRIANGLE_FAN, 629, n );
+    gl.drawArrays( gl.TRIANGLE_FAN, 632, n );
+    gl.drawArrays( gl.TRIANGLE_FAN, 635, n );
+
+
+}
+
 function DrawGround() {
     // gl.viewport(-415, -256, canvas.width, canvas.height); // golden ratio viewport
     gl.viewport(0, 0, canvas.width, canvas.height); // golden ratio viewport
@@ -209,9 +280,9 @@ function DrawStars() {
     console.log(w, h)
     for (var i=0; i<25; i++)   {
        for (var j=0; j<25; j++) {
-          var rw = Math.floor(Math.random() * (w - 2 + 1)) + 30;
-          var rh = Math.floor(Math.random() * (h - 2 + 1)) + 3;
-          gl.viewport((i*rw)-90, 210+(j*rh), canvas.width/15, canvas.height/15);
+          var rw = Math.floor(Math.random() * (w - 2 + 1)) + 20;
+          var rh = Math.floor(Math.random() * (h - 2 + 1));
+          gl.viewport((i*rw)-80, 230+(j*rh), canvas.width/15, canvas.height/15);
           // modelViewMatrix = mult(modelViewMatrix, translate(1, 2, 1));
           gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
           gl.drawArrays( gl.LINE_LOOP, 602, 12);
@@ -293,6 +364,7 @@ function render() {
    DrawGround();
    // draw stars and mountains... next
 
+   DrawBackground();
    // then, draw planet, add rings too
    DrawFullPlanet();
    //
@@ -302,6 +374,7 @@ function render() {
    modelViewMatrix=mult(modelViewMatrix, scale4(2, 2, 1));
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
    DrawGhost();
+
 
    // add other things, like bow, arrow, spider, flower, tree ...
 
